@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -22,6 +23,8 @@ func ConnectDB() {
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Println("Migrating db")
 
 	// db.AutoMigrate(&Ecommerce{}, &Product{}, &Staff{}, &Customer{}, &Report{}, &Discout{}, &EcommerceAccount{}, &Order{}, &ProductOrder{})
 
