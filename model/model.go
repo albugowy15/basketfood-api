@@ -55,7 +55,7 @@ type Discout struct {
 	Title string `json:"title"`
 	Percentage float32	`json:"percentage"`
 	EcommerceID uint `json:"ecommerce_id"`
-	Ecommerce Ecommerce
+	Ecommerce Ecommerce `json:"ecommerce"`
 }
 
 type EcommerceAccount struct {
