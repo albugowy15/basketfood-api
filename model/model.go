@@ -18,6 +18,7 @@ type Product struct {
 	SellingPrice uint `json:"selling_price"`
 	ProductionPrice uint `json:"production_price"`
 	Profit uint `json:"profit"`
+	ProductOrders []ProductOrder `json:"-"`
 }
 
 type Staff struct {
@@ -27,6 +28,8 @@ type Staff struct {
 	PhoneNumber string `json:"phone_number"`
 	Salary uint	`json:"salary"`
 	Role string	`json:"role"`
+	Orders []Order	`json:"orders"`
+	Reports []Report	`json:"reports"`
 }
 
 type Customer struct {
@@ -35,7 +38,8 @@ type Customer struct {
 	Address string	`json:"address"`
 	PhoneNumber string `json:"phone_number"`
 	EcommerceID uint `json:"ecommerce_id"`
-	Ecommerce Ecommerce
+	Ecommerce Ecommerce `json:"ecommerce"`
+	Orders []Order `json:"orders"`
 }
 
 type Report struct {
@@ -46,8 +50,8 @@ type Report struct {
 	Outcome uint	`json:"outcome"`
 	Profit int `json:"profit"`
 	StaffID uint `json:"staff_id"`
-	Staff Staff
-	CreatedAt time.Time
+	Staff Staff	`json:"staff"`
+	CreatedAt time.Time	`json:"created_at"`
 }
 
 type Discout struct {
@@ -56,6 +60,7 @@ type Discout struct {
 	Percentage float32	`json:"percentage"`
 	EcommerceID uint `json:"ecommerce_id"`
 	Ecommerce Ecommerce `json:"ecommerce"`
+	Orders []Order `json:"orders"`
 }
 
 type EcommerceAccount struct {
@@ -64,28 +69,30 @@ type EcommerceAccount struct {
 	Username string	`json:"username"`
 	ProfileUrl string `json:"profile_url"`
 	EcommerceID uint `json:"ecommerce_id"`
-	Ecommerce Ecommerce
+	Ecommerce Ecommerce	`json:"ecommerce"`
+	Orders []Order	`json:"orders"`
 }
 
 type Order struct {
 	ID uint `gorm:"primaryKey" json:"id"`
 	TotalPrice uint `json:"total_price"`
 	CustomerID uint `json:"customer_id"`
+	Customer Customer `json:"customer"`
 	DiscoutID uint	`json:"discount_id"`
+	Discout Discout	`json:"discount"`
 	EcommerceAccountID uint	`json:"ecommerce_account_id"`
+	EcommerceAccount EcommerceAccount	`json:"ecommerce_account"`
 	StaffID uint	`json:"staff_id"`
-	Customer Customer
-	Discout Discout
-	EcommerceAccount EcommerceAccount
-	Staff Staff
+	Staff Staff	`json:"staff"`
+	Orders []ProductOrder	`json:"orders"`
 }
 
 type ProductOrder struct {
 	ID uint `gorm:"primaryKey" json:"id"`
 	ProductID uint	`json:"product_id"`
+	Product Product	`json:"product"`
 	OrderID uint	`json:"order_id"`
-	Product Product
-	Order Order
+	Order Order	`json:"order"`
 	Quantity uint	`json:"quantity"`
 	Price uint	`json:"price"`
 }

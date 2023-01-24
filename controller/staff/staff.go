@@ -6,10 +6,19 @@ import (
 	"github.com/albugowy15/basketfood-api/model"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func Index(c *gin.Context) {
-	var staffs []model.Staff
+	type Staff struct {
+		ID uint `gorm:"primaryKey" json:"id"`
+		Fullname string `json:"fullname"`
+		Address string 	`json:"address"`
+		PhoneNumber string `json:"phone_number"`
+		Salary uint	`json:"salary"`
+		Role string	`json:"role"`
+	}
+	var staffs []Staff
 
 	model.DB.Order("id").Find(&staffs)
 
@@ -22,7 +31,7 @@ func Show(c *gin.Context) {
 	id := c.Param("id")
 	var staff model.Staff
 
-	err := model.DB.First(&staff, id).Error
+	err := model.DB.Model(&staff).Preload(clause.Associations).First(&staff, id).Error
 
 	if err != nil {
 		switch err {

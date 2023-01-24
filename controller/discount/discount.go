@@ -6,6 +6,7 @@ import (
 	"github.com/albugowy15/basketfood-api/model"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func Index(c *gin.Context) {
@@ -36,7 +37,7 @@ func Show(c *gin.Context) {
 	var discount model.Discout
 	id := c.Param("id")
 
-	err := model.DB.Model(&discount).Preload("Ecommerce").First(&discount, id).Error
+	err := model.DB.Model(&discount).Preload(clause.Associations).First(&discount, id).Error
 
 	if err != nil {
 		switch err {

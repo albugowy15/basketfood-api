@@ -28,7 +28,6 @@ func main()  {
 	r.GET("/api/orders", order.Index)
 	r.GET("/api/order/:id", order.Show)
 	r.POST("/api/order", order.Create)
-	r.PUT("/api/order/:id", order.Update)
 	r.DELETE("/api/order/:id", order.Delete)
 
 	// staffs api

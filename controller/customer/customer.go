@@ -6,6 +6,7 @@ import (
 	"github.com/albugowy15/basketfood-api/model"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type Customer struct {
@@ -37,7 +38,7 @@ func Show(c *gin.Context) {
 
 	id := c.Param("id")
 
-	err := model.DB.Model(&customer).Preload("Ecommerce").First(&customer, id).Error
+	err := model.DB.Model(&customer).Preload(clause.Associations).First(&customer, id).Error
 	if err != nil {
 		switch err {
 		case gorm.ErrRecordNotFound: 
