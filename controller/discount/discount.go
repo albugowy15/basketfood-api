@@ -43,7 +43,7 @@ func Show(c *gin.Context) {
 		switch err {
 		case gorm.ErrRecordNotFound:
 			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-				"message": "Discount tidak ditemukan",
+				"message": "Discout tidak ditemukan",
 			})
 			return
 		default:
@@ -115,13 +115,13 @@ func Delete(c *gin.Context) {
 
 	if countRows {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-			"message": "Discount tidak ditemukan",
+			"message": "Discout tidak ditemukan",
 		})
 		return
 	}
 
 	c.JSON(http.StatusAccepted, gin.H{
-		"message": "Discount berhasil dihapus",
+		"message": "Discout berhasil dihapus",
 	})
 	
 }

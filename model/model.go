@@ -44,14 +44,14 @@ type Customer struct {
 
 type Report struct {
 	ID uint `gorm:"primaryKey" json:"id"`
-	From time.Time `json:"from"`
-	To time.Time	`json:"toe"`
+	From *time.Time `json:"from" time_format:"2006-01-02"`
+	To *time.Time	`json:"to" time_format:"2006-01-02"`
 	Income uint	`json:"income"`
 	Outcome uint	`json:"outcome"`
 	Profit int `json:"profit"`
 	StaffID uint `json:"staff_id"`
 	Staff Staff	`json:"staff"`
-	CreatedAt time.Time	`json:"created_at"`
+	CreatedAt *time.Time	`gorm:"auto_preload" json:"created_at" time_format:"2006-01-02"`
 }
 
 type Discout struct {
@@ -85,6 +85,7 @@ type Order struct {
 	StaffID uint	`json:"staff_id"`
 	Staff Staff	`json:"staff"`
 	Orders []ProductOrder	`json:"orders"`
+	CreatedAt *time.Time `gorm:"auto_preload" json:"created_at" time_format:"2006-01-02"`
 }
 
 type ProductOrder struct {
