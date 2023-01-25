@@ -66,37 +66,31 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	var orders []model.Order
+	// get income
+	var income float64
 
-	res := model.DB.Where("created_at BETWEEN ? AND ?", reportRequest.From, reportRequest.To).Preload("Orders").Preload("Orders.Product").Find(&orders)
+	res := model.DB.Table("orders").Select("SUM(total_price) as income").Where("created_at BETWEEN ? AND ?", reportRequest.From, reportRequest.To).Scan(&income)
 
 	if res.Error != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": res.Error.Error()})
-		return
-	} else if res.RowsAffected == 0 {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "No orders found"})
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": res.Error.Error()})
 		return
 	}
 
-	// get income
-	var income uint
-	var outcome uint
+	var outcome float64
 
-	for _, order := range orders {
-		for _, productOrder := range order.Orders {
-			outcome += productOrder.Product.ProductionPrice * productOrder.Quantity
-		}
-		income += order.TotalPrice
+	res = model.DB.Table("orders").Select("SUM(product_orders.quantity * products.production_price) as outcome").Joins("JOIN product_orders ON orders.id = product_orders.order_id").Joins("JOIN products ON product_orders.product_id = products.id").Where("orders.created_at BETWEEN ? AND ?", reportRequest.From, reportRequest.To).Scan(&outcome)
+	if res.Error != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": res.Error.Error()})
+		return
 	}
-	
 	
 	profit := income - outcome
 
 	report := model.Report{
 		From: &reportRequest.From,
 		To: &reportRequest.To,
-		Income: income,
-		Outcome: outcome,
+		Income: uint(income),
+		Outcome: uint(outcome),
 		Profit: int(profit),
 		StaffID: reportRequest.StaffID,
 	}
