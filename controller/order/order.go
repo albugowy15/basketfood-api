@@ -153,12 +153,20 @@ func Create(c *gin.Context) {
 		}
 
 		var product Product
-		if err := model.DB.First(&product, order.ProductID).Error; err != nil {
+		if err := tx.First(&product, order.ProductID).Error; err != nil {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 				"message": "Product tidak dapat ditemukan",
 			})
 			return
 		}
+
+		if err := tx.Model(&model.Product{}).Where("id = ?", order.ProductID).Update("stock", gorm.Expr("stock - ?", order.Quantity)).Error; err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"message": "Stock tidak cukup",
+			})
+			return
+		}
+		
 		itemPrice := product.SellingPrice * order.Quantity
 
 		if err := tx.Create(&model.ProductOrder{
